@@ -2,7 +2,6 @@ resources:
 - namespace.yaml
 - issuer.yaml
 - certificate.yaml
-- ingress.yaml
 - deployment.yaml
-- metallb.yaml 
 - service.yaml
+- metallb.yaml
