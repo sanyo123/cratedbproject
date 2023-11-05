@@ -18,54 +18,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-hub/kubectl@master
-
-      - name: Deploy
+      
+      - name: Deploy to EKS
         uses: cancue/eks-action@v0.0.2
         env:
           aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: $AWS_REGION
           cluster_name: $EKS_CLUSTER_NAME
-          
-          
-      - name: Build Docker image
-        run: docker build -t sanyo123/myapp:latest .
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
 
-      - name: Provide tag to image
-        run: docker tag sanyo123/myappp:latest sanyo123/myapp:latest
+      - name: Build Docker image
+        run: docker build -t $DOCKER_IMAGE:$DOCKER_TAG .
 
       - name: Login to Docker Hub
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Push Docker image
-        run: docker push sanyo123/myapp:latest
+        run: docker push $DOCKER_IMAGE:$DOCKER_TAG
 
       - name: Set up kubectl
         uses: steebchen/kubectl@v2.0.0
         with:
-          version: latest      
-          
+          version: latest
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
+
       - name: Install Helm
         run: |
           curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
           chmod 700 get_helm.sh
           ./get_helm.sh
-          
-      - name:  Install ingress-nginx using helm
+
+      - name: Install ingress-nginx using helm
         run: |
           helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
           helm repo update
           helm install nginx-ingress ingress-nginx/ingress-nginx -n nginx-ingress
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
 
-      - name: Install Cert-Manager usin helm
+      - name: Install Cert-Manager using helm
         run: |
           helm repo add jetstack https://charts.jetstack.io
           helm repo update
-          helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.13.2 --set installCRDs=tru
-        
+          helm install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.13.2 --set installCRDs=true
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
 
-      - name: deploy to kubernetes
-        run:  |
+      - name: Deploy to Kubernetes
+        run: |
          kubectl apply -k .
-        
+        env:
+          KUBE_CONFIG: ${{ secrets.KUBE_CONFIG }}
