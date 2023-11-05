@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: myapp-certificate
+  namespace: myapp-ns
+spec:
+  secretName: myapp-tls-secret
+  dnsNames:
+  - myapp.example.com
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+    group: cert-manager.ios
