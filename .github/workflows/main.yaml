@@ -6,11 +6,11 @@ on:
       - main
 
 env:
-  DOCKER_IMAGE: lkapilcloud/myapp
+  DOCKER_IMAGE: sanyo123/myapp
   DOCKER_TAG: latest
   K8S_NAMESPACE: myapp-ns
   K8S_DEPLOYMENT: myapp-deployment
-  AWS_REGION: ap-south-1
+  AWS_REGION: us-east-1
   EKS_CLUSTER_NAME: myapp-cluster
 
 jobs:
@@ -30,10 +30,10 @@ jobs:
           
           
       - name: Build Docker image
-        run: docker build -t lkapilcloud/myapp:latest .
+        run: docker build -t sanyo123/myapp:latest .
 
       - name: Provide tag to image
-        run: docker tag lkapilcloud/myapp:latest lkapilcloud/myapp:latest
+        run: docker tag sanyo123/myappp:latest sanyo123/myapp:latest
 
       - name: Login to Docker Hub
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
