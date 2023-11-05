@@ -55,7 +55,7 @@ Verify that the metallb pods are running: kubectl get pods -n metallb-system
 
 ### Step 9: Run deployment on kubernetes cluster using Kustomization manifest file
 
-kubectl apply -f kustomization.yaml
+kubectl apply -k .
 
 
 **This deployment file succesfully deploy "hello world" application with SSL (self-signed) on the url: https:myapp.example.com/crate-demo**
