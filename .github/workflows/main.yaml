@@ -39,7 +39,7 @@ jobs:
         run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
       - name: Push Docker image
-        run: docker push lkapilcloud/myapp:latest
+        run: docker push sanyo123/myapp:latest
 
       - name: Set up kubectl
         uses: steebchen/kubectl@v2.0.0
@@ -67,10 +67,5 @@ jobs:
 
       - name: deploy to kubernetes
         run:  |
-          kubectl apply -f k8s/app/namespace.yaml
-          kubectl apply -f k8s/app/issuer.yaml
-          kubectl apply -f k8s/app/certificate.yaml
-          kubectl apply -f k8s/app/deployment.yaml
-          kubectl apply -f k8s/app/service.yaml
-          kubectl apply -f k8s/app/ingress.yaml
-         
+         kubectl apply -k .
+        
