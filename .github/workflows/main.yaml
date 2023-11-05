@@ -9,7 +9,7 @@ env:
   DOCKER_IMAGE: sanyo123/myapp
   DOCKER_TAG: latest
   K8S_NAMESPACE: myapp-ns
-  K8S_DEPLOYMENT: myapp-deployment
+  K8S_DEPLOYMENT: app-deployment
   AWS_REGION: us-east-1
   EKS_CLUSTER_NAME: myapp-cluster
 
